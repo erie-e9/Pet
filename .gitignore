@@ -1,0 +1,4 @@
+backend/server/node_modules/**/*
+frontend/app/node_modules/**/*
+frontend/app/.expo/*
+frontend/app/npm-debug.*
