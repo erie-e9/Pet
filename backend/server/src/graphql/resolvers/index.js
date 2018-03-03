@@ -1,32 +1,50 @@
 import GraphQLDate from 'graphql-date'
-import StateResolvers from './state-resolvers';
-import UserResolvers from './user-resolvers';
-import PageResolvers from './page-resolvers';
+import EventsResolvers from './events-resolvers';
+import PagesResolvers from './pages-resolvers';
+import PetsResolvers from './pets-resolvers';
+import PostsResolvers from './posts-resolvers';
+import UsersResolvers from './users-resolvers';
 
 export default {
     Date: GraphQLDate,
     Query: {
-        getStates: StateResolvers.getStates,
-        getState: StateResolvers.getState,
-        
-        getUsers: UserResolvers.getUsers,
-        getUser: UserResolvers.getUser,
+        getEvent: EventsResolvers.getEvent,
+        getEvents: EventsResolvers.getEvents,
 
-        getPages: PageResolvers.getPages,
-        getPage: PageResolvers.getPage
+        getPage: PagesResolvers.getPage,
+        getPages: PagesResolvers.getPages,
+
+        getPet: PetsResolvers.getPet,
+        getPets: PetsResolvers.getPets,
+
+        getPost: PostsResolvers.getPost,
+        getPosts: PostsResolvers.getPosts,
+        
+        getUser: UsersResolvers.getUser,
+        getUsers: UsersResolvers.getUsers,
+
 
     },
     Mutation: {
-        createState: StateResolvers.createState,
-        updateState: StateResolvers.updateState,
-        deleteState: StateResolvers.deleteState,
+        createEvent: EventsResolvers.createEvent,
+        updateEvent: EventsResolvers.updateEvent,
+        deleteEvent: EventsResolvers.deleteEvent,
 
-        createUser: UserResolvers.createUser,
-        updateUser: UserResolvers.updateUser,
-        deleteUser: UserResolvers.deleteUser,
+        createPage: PagesResolvers.createPage,
+        updatePage: PagesResolvers.updatePage,
+        deletePage: PagesResolvers.deletePage,
 
-        createPage: PageResolvers.createPage,
-        updatePage: PageResolvers.updatePage,
-        deletePage: PageResolvers.deletePage
+        createPet: PetsResolvers.createPet,
+        updatePet: PetsResolvers.updatePet,
+        deletePet: PetsResolvers.deletePet,
+
+        createPost: PostsResolvers.createPost,
+        updatePost: PostsResolvers.updatePost,
+        deletePost: PostsResolvers.deletePost,
+
+        createUser: UsersResolvers.createUser,
+        updateUser: UsersResolvers.updateUser,
+        deleteUser: UsersResolvers.deleteUser,
+        loginUser: UsersResolvers.loginUser,
     }
 }

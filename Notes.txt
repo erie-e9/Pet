@@ -1,0 +1,53 @@
+Links: [
+  Competencias: http://www.cuidadoconelperro.cl/programa-2/
+]
+
+mutation{
+  createUser(uusername:"JarnoLeppala!",
+uphone: "6181092045",
+ucellphone: "6181092045",
+uemail: "eric@gmail.com",
+upassword: "password123",
+uavatar: "eric.jpg",
+ufirstname: "Eric",
+ulastname: "Torres",
+ubirtdate: "27/04/1992",
+ugender: "male",
+ucountry: "México",
+ustate: "Durango",
+ucity: "Durango",
+ustreet: "Bayacora",
+uzip: 34000,
+ugeolocation: "pos aqui we XD",
+uemailverified: "verified",
+uactiveaccount: "active",
+ucurrentoccupation: "worker",
+uranking: 3,
+udateadmission: "23/03/2017",
+ulastlogin: "23/03/2017"
+  ){
+    _id
+    uusername
+    uphone
+ucellphone
+uemail
+upassword
+uavatar
+ufirstname
+ulastname
+ubirtdate
+ugender
+ucountry
+ustate
+ucity
+ustreet
+uzip
+ugeolocation
+uemailverified
+uactiveaccount
+ucurrentoccupation
+uranking
+udateadmission
+ulastlogin
+  }
+}

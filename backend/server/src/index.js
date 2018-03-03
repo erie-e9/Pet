@@ -6,7 +6,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 import constants from './config/constants';
 import resolvers from './graphql/resolvers'
 import typeDefs from './graphql/schema';
-import mocks from './mocks/page';
+import mocks from './mocks/events';
 import './config/db';
 
 const app = express();
@@ -30,7 +30,7 @@ mocks().then(() => {
         if(err){
             console.log(`Error running app:  ${err}`)
         }else{
-            console.log(`App running on: localhost:${constants.PORT}/graphiql`);
+            console.log(`App running on: http://localhost:${constants.PORT}${constants.GRAPHQL_PATH}`);
         }
     })
 })

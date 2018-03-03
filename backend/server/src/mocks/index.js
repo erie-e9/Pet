@@ -1,7 +1,7 @@
-import state from './state';
-import user from './user';
+import post from './posts';
+import user from './users';
 
 export default {
-    state,
+    post,
     user
 }

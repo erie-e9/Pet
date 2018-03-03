@@ -1,10 +1,10 @@
-import Page from '../../models/Page';
+import Page from '../../models/pages';
 
 export default {
-    getPages: () => Page.find({}).sort({ createdAt: -1 }),
     getPage: (_, { _id }) => Page.findById(_id),
+    getPages: () => Page.find({}).sort({ createdAt: -1 }),
     createPage: (_, args) => Page.create(args),
-    updatePage: (_, { _id, ...rest }) => Page.findByIdAndUpdate(_id, rest, { new: true }),
+    updatePage: (_, { _id, ...rest }) => Page.findByIdAndUpdate(_id, rest, {new: true}),
     deletePage: async (_, { _id }) => {
         try {
             await Page.findByIdAndRemove(_id);
