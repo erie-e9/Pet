@@ -5,6 +5,10 @@ export default `
         message: String!
     }
 
+    type Auth {
+        token: String!
+    }
+
     type Event {
         _id: ID!
         evname: String!
@@ -108,6 +112,34 @@ export default `
         updatedAt: Date!
     }
 
+    type Me {
+        _id: ID!
+        uusername: String!
+        uphone: String
+        ucellphone: String!
+        uemail: String!
+        upassword: String!
+        uavatar: String!
+        ufirstname: String!
+        ulastname: String
+        ubirtdate: String!
+        ugender: String!
+        ucountry: String!
+        ustate: String!
+        ucity: String!
+        ustreet: String!
+        uzip: Int!
+        ugeolocation: String!
+        uemailverified: String!
+        uactiveaccount: String!
+        ucurrentoccupation: String!
+        uranking: Int!
+        udateadmission: String!
+        ulastlogin: String!
+        createdAt: Date!
+        updatedAt: Date!
+    }
+
     type Query {
         getEvent(_id: ID!): Event
         getEvents: [ Event ]
@@ -123,6 +155,8 @@ export default `
 
         getUser(_id: ID!): User
         getUsers: [ User ]
+
+        me: Me
         }
 
     type Mutation {
@@ -262,7 +296,7 @@ export default `
                     ucurrentoccupation: String!,
                     uranking: Int!,
                     udateadmission: String!,
-                    ulastlogin: String!): User
+                    ulastlogin: String!): Auth
         updateUser(_id: ID!, 
                     uusername: String!
                     uphone: String!,
@@ -287,7 +321,7 @@ export default `
                     udateadmission: String!,
                     ulastlogin: String!): User
         deleteUser(_id: ID!): User
-        loginUser(uemail: String!, upassword: String!): User
+        loginUser(uemail: String!, upassword: String!): Auth
 
     }
 

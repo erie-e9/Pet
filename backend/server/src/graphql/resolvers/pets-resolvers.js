@@ -1,12 +1,42 @@
 import Pet from '../../models/pets';
+import { requireAuth } from '../../services/auth';
 
 export default {
-    getPet: (_, { _id }) => Pet.findById(_id),
-    getPets: () => Pet.find({}).sort({createdAt: -1}),
-    createPet: (_, args) => Pet.create(args),
-    updatePet: (_, { _id, ...rest }) => Pet.findByIdAndUpdate(_id, rest, {new: true}),
-    deletePet: async (_, { _id }) => {
+    getPet: async (_, { _id }, { user }) => {
         try {
+            await requireAuth(user);
+            return Pet.findById(_id);
+        } catch (error) {
+            throw error;
+        }
+    },
+    getPets: async (_, args, { user }) => {
+        try {
+            await requireAuth(user);
+            return Pet.find({}).sort({createdAt: -1});
+        } catch (error) {
+            throw error;
+        }
+    },
+    createPet: async (_, args, { user }) => {
+        try {
+            await requireAuth(user);
+            return Pet.create(args);
+        } catch (error) {
+            throw error;
+        }
+    },
+    updatePet: async (_, { _id, ...rest }, { user }) => {
+        try {
+            await requireAuth(user);
+            return Pet.findByIdAndUpdate(_id, rest, {new: true});
+        } catch (error) {
+            throw error;
+        }
+    },
+    deletePet: async (_, { _id }, { user }) => {
+        try {
+            await requireAuth(user);
             await Pet.findByIdAndRemove(_id);
             return {
                 message: 'Pet deleted success!'

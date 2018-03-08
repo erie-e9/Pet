@@ -1,12 +1,44 @@
 import User from '../../models/users';
+import { requireAuth } from '../../services/auth';
 
 export default {
-    getUsers: () => User.find({}).sort({ createdAt: -1 }),
-    getUser: (_, { _id }) => User.findById(_id),
-    createUser: (_, args) => User.create(args),
-    updateUser: (_, { _id, ...rest}) => User.findByIdAndUpdate(_id, rest, { new: true }),
-    deleteUser: async (_, { _id }) => {
+    getUsers: async (_, args, { user }) => {
         try {
+            await requireAuth(user);
+            return User.find({}).sort({ createdAt: -1 });
+        } catch (error) {
+            throw error;
+        }
+    },
+    getUser: async (_, { _id }, { user }) => {
+        try {
+            await requireAuth(user);
+            return User.findById(_id);
+        } catch (error) {
+            throw error;
+        }
+    },
+    createUser: async (_, args) => { // sign up
+      try {
+        let user = await User.create(args);
+        return {
+            token: user._createToken() 
+        }
+      } catch (error) {
+          throw error;
+      }
+    },
+    updateUser: async (_, { _id, ...rest}, { user }) => {
+        try {
+            await requireAuth(user);
+            return User.findByIdAndUpdate(_id, rest, {new: true});
+        } catch (error) {
+            throw error;
+        }
+    },
+    deleteUser: async (_, { _id }, { user }) => {
+        try {
+            await requireAuth(user);
             await User.findByIdAndRemove(_id);
             return {
                 message: 'User deleted success!'
@@ -16,15 +48,29 @@ export default {
         }
     },
     loginUser: async (_, { uemail, upassword }) => {
-        const user = await User.findOne({ uemail });
+        try {
+            let user = await User.findOne({ uemail });
 
-        if (!user) {
-            throw new Error('User not exist');
-        }
-        if (!user._authenticate(upassword)) {
-            throw new Error('User password not match');
-        }
+            if (!user) {
+                throw new Error('User not exist');
+            }
+            if (!user._authenticate(upassword)) {
+                throw new Error('User password not match');
+            }
 
-        return user;
+            return {
+                token: user._createToken
+            };
+        } catch (error) {
+            throw error;
+        }
+    },
+    me: async (_, args, { user }) => {
+        try {
+            const me = await requireAuth(user);
+            return me;
+        } catch (error) {
+            throw error;
+        }
     }
 }

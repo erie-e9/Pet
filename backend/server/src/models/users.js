@@ -1,5 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 import { hashSync, compareSync } from 'bcrypt-nodejs';
+import jwt from 'jsonwebtoken';
+import constants from '../config/constants';
 
 const UserSchema = new Schema({
     uusername: {
@@ -140,8 +142,15 @@ UserSchema.methods = {
     _hashPassword(upassword) {
         return hashSync(upassword);
     },
-    _authenticate(upassword){
+    _authenticate(upassword) {
         return compareSync(upassword, this.upassword);
+    },
+    _createToken() {
+        return jwt.sign({
+            _id: this._id
+        },
+        constants.JWT_SECRET
+        )
     }
     
 }

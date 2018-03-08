@@ -1,12 +1,42 @@
 import Events from '../../models/events';
+import { requireAuth } from '../../services/auth';
 
 export default {
-    getEvent: (_, { _id }) => Events.findById(_id),
-    getEvents: () => Events.find({}).sort({ createdAt: -1}),
-    createEvent: (_, args) => Events.create(args),
-    updateEvent: (_, { _id, ...rest }) => Events.findByIdAndUpdate(_id, rest, {new: true}),
-    deleteEvent: async (_, { _id }) => {
+    getEvent: async (_, { _id }, { user }) => {
         try {
+         await requireAuth(user);
+         return Events.findById(_id);   
+        } catch (error) {
+            throw error;
+        }
+    },
+    getEvents: async (_, args, { user }) => {
+        try {
+         await requireAuth(user);
+         return Events.find({}).sort({ createdAt: -1});   
+        } catch (error) {
+            throw error;
+        }
+    },
+    createEvent: async (_, args, { user }) => {
+        try {
+         await requireAuth(user);
+         return Events.create(args);   
+        } catch (error) {
+            throw error;
+        }
+    },
+    updateEvent: async (_, { _id, ...rest }, { user }) => {
+        try {
+         await requireAuth(user);
+         return Events.findByIdAndUpdate(_id, rest, {new: true});   
+        } catch (error) {
+            throw error;
+        }
+    },
+    deleteEvent: async (_, { _id }, { user }) => {
+        try {
+            await requireAuth(user);
             await Events.findByIdAndRemove(_id);
             return {
                 message: 'Event deleted success!'

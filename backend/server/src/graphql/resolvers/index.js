@@ -22,7 +22,7 @@ export default {
         
         getUser: UsersResolvers.getUser,
         getUsers: UsersResolvers.getUsers,
-
+        me: UsersResolvers.me,
 
     },
     Mutation: {
