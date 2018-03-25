@@ -18,10 +18,18 @@ export default {
             throw error;
         }
     },
+    getUserPosts: async (_, args, { user }) => {
+        try {
+            await requireAuth(user);
+            return Post.find({ user: user._id }).sort({ createdAt: -1 });
+        } catch (error) {
+            throw error;
+        }
+    },
     createPost: async (_, args, { user }) => {
         try {
             await requireAuth(user);
-            return Post.create(args);
+            return Post.create({ ...args, user: user._id });
         } catch (error) {
             throw error;
         }
@@ -29,7 +37,18 @@ export default {
     updatePost: async (_, { _id, ...rest }, { user }) => {
         try {
             await requireAuth(user);
-            return Post.findByIdAndUpdate(_id, rest, {new: true});
+            const post = await Post.findOne({ _id, user: user._id });
+
+            if (!post) {
+                throw new Error('Post not found...');
+            }
+
+            Object.entries(rest).forEach(([key, value]) => {
+                post[key] = value;
+            });
+
+            return post.save();
+
         } catch (error) {
             throw error;
         }

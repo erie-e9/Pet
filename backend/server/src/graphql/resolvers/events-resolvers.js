@@ -18,10 +18,18 @@ export default {
             throw error;
         }
     },
+    getUserEvents: async (_, args, { user }) => {
+        try {
+         await requireAuth(user);
+         return Events.find({ user: user._id }).sort({ createdAt: -1 });
+        } catch (error) {
+            throw error;
+        }
+    },
     createEvent: async (_, args, { user }) => {
         try {
          await requireAuth(user);
-         return Events.create(args);   
+         return Events.create({ ...args, user: user._id });   
         } catch (error) {
             throw error;
         }
@@ -29,7 +37,18 @@ export default {
     updateEvent: async (_, { _id, ...rest }, { user }) => {
         try {
          await requireAuth(user);
-         return Events.findByIdAndUpdate(_id, rest, {new: true});   
+         const oneevent = await Events.findOne({ _id, user: user._id });
+         
+         if (!oneevent) {
+             throw new Error('Event not found');
+         }
+
+         Object.entries(rest).forEach(([key, value]) => {
+            oneevent[key] = value;
+         });
+
+         return oneevent.save();
+
         } catch (error) {
             throw error;
         }

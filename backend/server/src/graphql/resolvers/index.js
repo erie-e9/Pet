@@ -4,21 +4,38 @@ import PagesResolvers from './pages-resolvers';
 import PetsResolvers from './pets-resolvers';
 import PostsResolvers from './posts-resolvers';
 import UsersResolvers from './users-resolvers';
+import User from '../../models/users';
 
 export default {
     Date: GraphQLDate,
+    Event: {
+        user: ({ user }) => User.findById(user)
+    },
+    Page: {
+        user: ({ user }) => User.findById(user)
+    },
+    Pet: {
+        user: ({ user }) => User.findById(user)
+    },
+    Post: {
+        user: ({ user }) => User.findById(user)
+    },
     Query: {
         getEvent: EventsResolvers.getEvent,
         getEvents: EventsResolvers.getEvents,
+        getUserEvents: EventsResolvers.getUserEvents,
 
         getPage: PagesResolvers.getPage,
         getPages: PagesResolvers.getPages,
+        getUserPages: PagesResolvers.getUserPages,
 
         getPet: PetsResolvers.getPet,
         getPets: PetsResolvers.getPets,
+        getUserPets: PetsResolvers.getUserPets,
 
         getPost: PostsResolvers.getPost,
         getPosts: PostsResolvers.getPosts,
+        getUserPosts: PostsResolvers.getUserPosts,
         
         getUser: UsersResolvers.getUser,
         getUsers: UsersResolvers.getUsers,

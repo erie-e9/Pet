@@ -21,6 +21,7 @@ export default `
         evtype: String!
         evimage: String!
         evvideo: String!
+        user: User!
         createdAt: Date!
         updatedAt: Date!
     }
@@ -44,6 +45,7 @@ export default `
         pstreet: String
         pzip: Int
         pgeolocation: String!
+        user: User!
         createdAt: Date!
         updatedAt: Date!
     }
@@ -72,6 +74,7 @@ export default `
         pereward: Boolean!
         pedeceased: Boolean!
         pegeolocation: String!
+        user: User!
         createdAt: Date!
         updatedAt: Date!
     }
@@ -80,6 +83,8 @@ export default `
         _id: ID!
         ptext: String
         pimage: String
+        user: User!
+        pclaps: Int!    
         createdAt: Date!
         updatedAt: Date!
     }
@@ -143,15 +148,19 @@ export default `
     type Query {
         getEvent(_id: ID!): Event
         getEvents: [ Event ]
+        getUserEvents: [ Event ]
 
         getPage(_id: ID!): Page 
         getPages: [ Page ]
+        getUserPages: [ Page ]
         
         getPet(_id: ID!): Pet 
         getPets: [ Pet ]
+        getUserPets: [ Pet ]
 
         getPost(_id: ID!): Post
         getPosts: [ Post ]
+        getUserPosts: [ Post ]
 
         getUser(_id: ID!): User
         getUsers: [ User ]

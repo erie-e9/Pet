@@ -18,10 +18,18 @@ export default {
             throw error;
         }
     },
+    getUserPets: async (_, args, { user }) => {
+        try {
+            await requireAuth(user);
+            return Pet.find({ user: user._id }).sort({ createdAt: -1 });
+        } catch (error) {
+            throw error;
+        }
+    },
     createPet: async (_, args, { user }) => {
         try {
             await requireAuth(user);
-            return Pet.create(args);
+            return Pet.create({ ...args, user: user._id });
         } catch (error) {
             throw error;
         }
@@ -29,7 +37,18 @@ export default {
     updatePet: async (_, { _id, ...rest }, { user }) => {
         try {
             await requireAuth(user);
-            return Pet.findByIdAndUpdate(_id, rest, {new: true});
+            const pet = await Pet.findOne({ _id, user: user._id });
+
+            if (!pet) {
+                throw new Error('Pet not found...');
+            }
+
+            Object.entries(rest).forEach(([key, value]) => {
+                pet[key] = value;
+            });
+
+            return pet.save();
+
         } catch (error) {
             throw error;
         }

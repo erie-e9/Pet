@@ -18,10 +18,18 @@ export default {
             throw error;
         }
     },
+    getUserPages: async (_, args, { user }) => {
+        try {
+            await requireAuth(user);
+            return Page.find({ user: user._id }).sort({ createdAt: -1 });
+        } catch (error) {
+            throw error;
+        }
+    },
     createPage: async (_, args, { user }) => {
         try {
             await requireAuth(user);
-            return Page.create(args);
+            return Page.create({ ...args, user: user._id });
         } catch (error) {
             throw error;
         }
@@ -29,7 +37,18 @@ export default {
     updatePage: async (_, { _id, ...rest }, { user }) => {
         try {
             await requireAuth(user);
-            return Page.findByIdAndUpdate(_id, rest, {new: true});  
+            const page = await Page.findOne({_id, user: user._id });
+
+            if (!page) {
+                throw new Error('Page not found...');
+            }
+
+            Object.entries(rest).forEach(([key, value]) => {
+                page[key] = value;
+            })
+
+            return page.save();
+
         } catch (error) {
             throw error;
         }

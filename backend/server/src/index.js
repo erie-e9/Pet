@@ -2,7 +2,7 @@
 import express from 'express';
 import { createServer } from 'http';
 import constants from './config/constants';
-import mocks from './mocks/users';
+import mocks from './mocks/index';
 import './config/db';
 import middlewares from './config/middlewares';
 
@@ -19,4 +19,4 @@ mocks().then(() => {
             console.log(`App running on: http://localhost:${constants.PORT}${constants.GRAPHQL_PATH}`);
         }
     })
-})
+});

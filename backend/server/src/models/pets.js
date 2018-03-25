@@ -94,6 +94,10 @@ const PetSchema = new Schema({
     pegeolocation: {
         type: String,
         required: 'Pet geolocation is required'
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 }, { timestamps: true })
 

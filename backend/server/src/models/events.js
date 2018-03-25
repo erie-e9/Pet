@@ -45,6 +45,10 @@ const EventSchema = new Schema({
         type: String,
         required: 'Event video is required',
     },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
 }, { timestamps: true })
 
 export default mongoose.model('Event', EventSchema);

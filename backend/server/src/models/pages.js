@@ -89,6 +89,10 @@ const PageSchema = new Schema({
         type: String,
         required: 'Page geolocation is required',
     },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
     // branchoffice: {
     //     [array]
     // }
