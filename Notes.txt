@@ -1,5 +1,6 @@
 Links: [
   Competencias: http://www.cuidadoconelperro.cl/programa-2/
+  Relaciones BD: https://www.uno-de-piera.com/relaciones-en-bases-de-datos-mysql/
 ]
 
 mutation{

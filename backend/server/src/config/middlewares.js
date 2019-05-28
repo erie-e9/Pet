@@ -6,6 +6,7 @@ import constants from './constants';
 import resolvers from '../graphql/resolvers';
 import typeDefs from '../graphql/schema';
 import { decodeToken } from '../services/auth';
+const cors = require('cors');
 
 const schema = makeExecutableSchema({
     typeDefs, 
@@ -29,6 +30,7 @@ async function auth(req, res, next) {
 
 export default app => {
     app
+    .use(cors())
     .use(bodyParser.json())
     .use(auth)
     .use('/graphiql', graphiqlExpress({

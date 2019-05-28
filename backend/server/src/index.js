@@ -7,6 +7,7 @@ import './config/db';
 import middlewares from './config/middlewares';
 
 const app = express();
+
 middlewares(app);
 
 const graphiqlServer = createServer(app);

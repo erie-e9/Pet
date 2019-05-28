@@ -10,7 +10,7 @@ const EventSchema = new Schema({
     evdescription: {
         type: String,
         minlength: [1, 'Event description must be longer that 1 character'],
-        maxlength: [250, 'Event description is very longer']
+        maxlength: [500, 'Event description is very longer']
     },
     evkeywords: {
         type: String,
@@ -43,7 +43,7 @@ const EventSchema = new Schema({
     },
     evvideo: {
         type: String,
-        required: 'Event video is required',
+        // required: 'Event video is required',
     },
     user: {
         type: Schema.Types.ObjectId,

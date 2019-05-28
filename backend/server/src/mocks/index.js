@@ -1,27 +1,27 @@
 import faker from 'faker';
 import Events from '../models/events';
 import Pages from '../models/pages';
-import Pet from '../models/pets';
-import Post from '../models/posts';
-import User from '../models/users';
+import Pets from '../models/pets';
+import Posts from '../models/posts';
+import Users from '../models/users';
 
-const EVENT_TOTAL = 3;
-const PAGE_TOTAL = 3;
-const PET_TOTAL = 3;
-const POST_TOTAL = 3;
-const USER_TOTAL = 2;
+const EVENTS_TOTAL = 3;
+const PAGES_TOTAL = 3;
+const PETS_TOTAL = 3;
+const POSTS_TOTAL = 3;
+const USERS_TOTAL = 2;
 
 export default async () => {
     try {
         await Events.remove();
         await Pages.remove();
-        await Pet.remove();
-        await Post.remove();
-        await User.remove();
+        await Pets.remove();
+        await Posts.remove();
+        await Users.remove();
 
-        await Array.from({ length: USER_TOTAL }).forEach(
+        await Array.from({ length: USERS_TOTAL }).forEach(
             async (_, i) => {
-                const user = await User.create({
+                const user = await Users.create({
                     uusername: faker.internet.userName(),
                     uphone: faker.phone.phoneNumberFormat(),
                     ucellphone: faker.phone.phoneNumberFormat(),
@@ -47,7 +47,7 @@ export default async () => {
                     ulastlogin: faker.date.recent(),
                 });
                 
-                await Array.from({ length: EVENT_TOTAL }).forEach(
+                await Array.from({ length: EVENTS_TOTAL }).forEach(
                     async () => await Events.create({
                                         evname: faker.internet.userName(),
                                         evdescription: 'Voluptas rerum ullam quia optio. Et rem iusto. Officiis velit dicta fugiat nam. Velit quas est dolor.',
@@ -61,9 +61,9 @@ export default async () => {
                                         evvideo: faker.internet.url(),
                                         user: user._id
                     })
-                )
+                );
                 
-                await Array.from({ length: PAGE_TOTAL }).forEach(
+                await Array.from({ length: PAGES_TOTAL }).forEach(
                     async () => await Pages.create({ 
                                         pname: faker.company.companyName(),
                                         pimage: faker.image.business(),
@@ -76,7 +76,7 @@ export default async () => {
                                         pcellphone: faker.phone.phoneNumberFormat(),
                                         pemail: faker.internet.email(),
                                         pworkinghours: '8am - 4pm',
-                                        pcountry: faker.address.country(),
+                                        pcountry: 'pcountry',
                                         pstate: faker.address.state(),
                                         pcity: faker.address.city(),
                                         pstreet: faker.address.streetName(),
@@ -84,10 +84,10 @@ export default async () => {
                                         pgeolocation: '24.214214,-107.321321',
                                         user: user._id 
                     })
-                )
+                );
 
-                await Array.from({ length: PET_TOTAL }).forEach(
-                    async() => await Pet.create({
+                await Array.from({ length: PETS_TOTAL }).forEach(
+                    async() => await Pets.create({
                                             pechipcode: '123QWE456RTY',
                                             pename: faker.internet.userName(),
                                             peage: 7,
@@ -112,15 +112,16 @@ export default async () => {
                                             pegeolocation: '24.214214,-107.321321',
                                             user: user._id
                     })
-                )
+                );
 
-                await Array.from({ length: POST_TOTAL }).forEach(
-                    async () => await Post.create({ 
+                await Array.from({ length: POSTS_TOTAL }).forEach(
+                    async () => await Posts.create({ 
                                         ptext: faker.lorem.paragraphs(1),
                                         pimage: faker.internet.avatar(),
+                                        pclaps: 0,
                                         user: user._id
                     })
-                )
+                );
                 
             }
         )

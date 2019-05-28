@@ -9,13 +9,13 @@ const PostSchema = new Schema({
         type: String,
         // maxlength: [1000, 'Post image is very longer']
     },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    },
     pclaps: {
         type: Number,
         default: 0
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 }, { timestamps: true });
 

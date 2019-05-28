@@ -35,7 +35,7 @@ const PetSchema = new Schema({
         required: 'Pet group is required',
         enum: ['mammals', 'birds', 'fish', 'reptiles', 'amphibians', 'arachnids', 'insects']
     },
-    pebirthdate: {
+    pebirthdate: { //! Pendiente cambiar a tipo de fecha
         type: String,
         required: 'Pet birthdate is required'
     },

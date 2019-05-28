@@ -23,7 +23,7 @@ const PageSchema = new Schema({
     ptype: {
         type: String,
         required: 'Page type is required',
-        enum: ['place', 'business', 'institution', 'organization', 'products']
+        enum: ['place', 'business', 'institution', 'organization', 'products'] //! pendiente cambiar su maximo y minimo]
     },
     purl: {
         type: String,
@@ -34,13 +34,13 @@ const PageSchema = new Schema({
         type: String,
         required: 'Page category is required'
     },
-    pphone: {
+    pphone: { //! pendiente cambiar su maximo y minimo
         type: String,
         required: 'Page phone is required',
         minlength: [9, 'Page phone must be longer that 9 characters'],
         maxlength: [15, 'Page phone is very longer']
     },
-    pcellphone: {
+    pcellphone: { //! pendiente cambiar su maximo y minimo
         type: String,
         minlength: [9, 'Page cellphone must be longer that 9 characters'],
         maxlength: [15, 'Page cellphone is very longer']
@@ -52,33 +52,33 @@ const PageSchema = new Schema({
         maxlength: [100, 'Employee email is very longer'],
         match:[/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,'Page email is incorrect type of email']
     },
-    pworkinghours: {
+    pworkinghours: { //! pendiente checar longitud
         type: String,
         // required: 'Page working hours are required',
     },
     pcountry: {
         type: String,
         // required: 'Page country is required',
-        minlength: [3, 'Page country must to be longer that 3 characters'],
-        maxlength: [50, 'Page country too long']
+        minlength: [3, 'Page country must be longer that 3 characters'],
+        maxlength: [50, 'Page country is very longer']
     },
     pstate: {
         type: String,
         // required: 'Page state is required',
-        minlength: [3, 'Page state must to be longer that 3 characters'],
-        maxlength: [50, 'Page state too long']
+        minlength: [3, 'Page state must be longer that 3 characters'],
+        maxlength: [50, 'Page state is very longer']
     },
     pcity: {
         type: String,
         // required: 'Page city is required',
-        minlength: [3, 'Page city must to be longer that 3 characters'],
-        maxlength: [50, 'Page city too long']
+        minlength: [3, 'Page city must be longer that 3 characters'],
+        maxlength: [50, 'Page city is very longer']
     },
     pstreet: {
         type: String,
         // required: 'Page street is required',
-        minlength: [3, 'Page street must to be longer that 3 characters'],
-        maxlength: [50, 'Page street too long']
+        minlength: [3, 'Page street must be longer that 3 characters'],
+        maxlength: [50, 'Page street is very longer']
     },
     pzip: {
         type: Number,

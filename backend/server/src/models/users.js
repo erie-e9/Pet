@@ -8,42 +8,42 @@ const UserSchema = new Schema({
         type: String,
         required: 'User username is required',
         unique: true,
-        minlength: [3, 'User username must to be longer that 3 characters'],
+        minlength: [3, 'User username must be longer that 3 characters'],
     },
-    ufirstname: {
+    ufirstname: { //!!!!! checar con schema y mocks, también logitud max
         type: String,
         required: 'User firstname is required',
-        minlength: [3, 'User firstname must to be longer that 3 characters'],
-        maxlength: [15, 'User firstname too long']
+        minlength: [3, 'User firstname must be longer that 3 characters'],
+        maxlength: [15, 'User firstname is very longer']
     },
-    ulastname: {
+    ulastname: { //!!!!! checar con schema y mocks, también logitud max
         type: String,
         // required: 'User lastname is required',
-        minlength: [3, 'User lastname must to be longer that 3 characters'],
-        maxlength: [15, 'User lastname too long']
+        minlength: [3, 'User lastname must be longer that 3 characters'],
+        maxlength: [15, 'User lastname is very longer']
     },
     uphone: {
         type: String,
-        minlength: [9, 'User phone must to be longer that 9 characters'],
-        maxlength: [15, 'User phone too long']
+        minlength: [9, 'User phone must be longer that 9 characters'],
+        maxlength: [30, 'User phone is very longer']
     },
     ucellphone: {
         type: String,
         required: 'User cellphone is required',
-        minlength: [9, 'User cellphone must to be longer that 9 characters'],
-        maxlength: [15, 'User cellphone too long']
+        minlength: [9, 'User cellphone must be longer that 9 characters'],
+        maxlength: [30, 'User cellphone is very longer']
     },
     uemail: {
         type: String,
         required: 'User email is required',
         unique: true,
-        maxlength: [100, 'User email is very longer'],
+        maxlength: [150, 'User email is very longer'],
         match:[/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,'Email is incorrect type of email']
     },
     upassword: {
         type: String,
         required: 'User password is required',
-        minlength: [10, 'User password must to be longer that 10 characters'],
+        minlength: [10, 'User password must be longer that 10 characters'],
     },
     uavatar: {
         type: String,
@@ -61,31 +61,32 @@ const UserSchema = new Schema({
     ucountry: {
         type: String,
         required: 'User country is required',
-        minlength: [3, 'User country must to be longer that 3 characters'],
-        maxlength: [50, 'User country too long']
+        minlength: [3, 'User country must be longer that 3 characters'],
+        maxlength: [50, 'User country is very longer']
     },
     ustate: {
         type: String,
         required: 'User state is required',
-        minlength: [3, 'User state must to be longer that 3 characters'],
-        maxlength: [50, 'User state too long']
+        minlength: [3, 'User state must be longer that 3 characters'],
+        maxlength: [50, 'User state is very longer']
     },
     ucity: {
         type: String,
         required: 'User city is required',
-        minlength: [3, 'User city must to be longer that 3 characters'],
-        maxlength: [50, 'User city too long']
+        minlength: [3, 'User city must be longer that 3 characters'],
+        maxlength: [50, 'User city is very longer']
     },
     ustreet: {
         type: String,
         required: 'User street is required',
-        minlength: [3, 'User street must to be longer that 3 characters'],
-        maxlength: [50, 'User street too long']
+        minlength: [3, 'User street must be longer that 3 characters'],
+        maxlength: [50, 'User street is very longer']
     },
     uzip: {
         type: Number,
         required: 'User zip is required',
-        min: [5, 'User zip must to be 5 characters']
+        min: [5, 'User zip must to be 5 characters'],
+        // max: [10, 'User zip is very longer']
     },
     ugeolocation: {
         type: String,
@@ -106,7 +107,7 @@ const UserSchema = new Schema({
     //     required: 'User uverificationcode is required',
     //     enum: ['verified', 'waiting']
     // },
-    ucurrentoccupation: {
+    ucurrentoccupation: { //! pendiente longitud
         type: String,
         required: 'User currentoccupation is required'
     },
@@ -116,11 +117,11 @@ const UserSchema = new Schema({
         min: [1, 'User only can be evaluated 1 to 10'],
         max: [10, 'User only can be evaluated 1 to 10']
     },
-    udateadmission: {
+    udateadmission: { //! pendiente cambiar a fecha
         type: String,
         required: 'User dateadmission is required'
     },
-    ulastlogin: {
+    ulastlogin: { //! pendiente cambiar a fecha
         type: String,
         required: 'User lastlogin is required'
     },

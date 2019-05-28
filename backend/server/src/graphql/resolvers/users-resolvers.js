@@ -28,7 +28,7 @@ export default {
           throw error;
       }
     },
-    updateUser: async (_, { _id, ...rest}, { user }) => {
+    updateUser: async (_, { _id, ...rest }, { user }) => {
         try {
             await requireAuth(user);
             return User.findByIdAndUpdate(_id, rest, {new: true});
@@ -59,7 +59,7 @@ export default {
             }
 
             return {
-                token: user._createToken
+                token: user._createToken()
             };
         } catch (error) {
             throw error;
