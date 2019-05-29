@@ -438,6 +438,35 @@ export type LoginUserMutation = { __typename?: "Mutation" } & {
   loginUser: Maybe<{ __typename?: "Auth" } & Pick<Auth, "token">>;
 };
 
+export type CreateUserMutationVariables = {
+  uusername: Scalars["String"];
+  uphone: Scalars["String"];
+  ucellphone: Scalars["String"];
+  uemail: Scalars["String"];
+  upassword: Scalars["String"];
+  uavatar: Scalars["String"];
+  ufirstname: Scalars["String"];
+  ulastname: Scalars["String"];
+  ubirtdate: Scalars["String"];
+  ugender: Scalars["String"];
+  ucountry: Scalars["String"];
+  ustate: Scalars["String"];
+  ucity: Scalars["String"];
+  ustreet: Scalars["String"];
+  uzip: Scalars["Int"];
+  ugeolocation: Scalars["String"];
+  uemailverified: Scalars["String"];
+  uactiveaccount: Scalars["String"];
+  ucurrentoccupation: Scalars["String"];
+  uranking: Scalars["Int"];
+  udateadmission: Scalars["String"];
+  ulastlogin: Scalars["String"];
+};
+
+export type CreateUserMutation = { __typename?: "Mutation" } & {
+  createUser: Maybe<{ __typename?: "Auth" } & Pick<Auth, "token">>;
+};
+
 export const LoginUserDocument = gql`
   mutation loginUser($email: String!, $password: String!) {
     loginUser(uemail: $email, upassword: $password) {
@@ -483,6 +512,100 @@ export function withLoginUser<TProps, TChildProps = {}>(
     LoginUserProps<TChildProps>
   >(LoginUserDocument, {
     alias: "withLoginUser",
+    ...operationOptions
+  });
+}
+export const CreateUserDocument = gql`
+  mutation createUser(
+    $uusername: String!
+    $uphone: String!
+    $ucellphone: String!
+    $uemail: String!
+    $upassword: String!
+    $uavatar: String!
+    $ufirstname: String!
+    $ulastname: String!
+    $ubirtdate: String!
+    $ugender: String!
+    $ucountry: String!
+    $ustate: String!
+    $ucity: String!
+    $ustreet: String!
+    $uzip: Int!
+    $ugeolocation: String!
+    $uemailverified: String!
+    $uactiveaccount: String!
+    $ucurrentoccupation: String!
+    $uranking: Int!
+    $udateadmission: String!
+    $ulastlogin: String!
+  ) {
+    createUser(
+      uusername: $uusername
+      uphone: $uphone
+      ucellphone: $ucellphone
+      uemail: $uemail
+      upassword: $upassword
+      uavatar: $uavatar
+      ufirstname: $ufirstname
+      ulastname: $ulastname
+      ubirtdate: $ubirtdate
+      ugender: $ugender
+      ucountry: $ucountry
+      ustate: $ustate
+      ucity: $ucity
+      ustreet: $ustreet
+      uzip: $uzip
+      ugeolocation: $ugeolocation
+      uemailverified: $uemailverified
+      uactiveaccount: $uactiveaccount
+      ucurrentoccupation: $ucurrentoccupation
+      uranking: $uranking
+      udateadmission: $udateadmission
+      ulastlogin: $ulastlogin
+    ) {
+      token
+    }
+  }
+`;
+export type CreateUserMutationFn = ReactApollo.MutationFn<
+  CreateUserMutation,
+  CreateUserMutationVariables
+>;
+export type CreateUserComponentProps = Omit<
+  Omit<
+    ReactApollo.MutationProps<CreateUserMutation, CreateUserMutationVariables>,
+    "mutation"
+  >,
+  "variables"
+> & { variables?: CreateUserMutationVariables };
+
+export const CreateUserComponent = (props: CreateUserComponentProps) => (
+  <ReactApollo.Mutation<CreateUserMutation, CreateUserMutationVariables>
+    mutation={CreateUserDocument}
+    {...props}
+  />
+);
+
+export type CreateUserProps<TChildProps = {}> = Partial<
+  ReactApollo.MutateProps<CreateUserMutation, CreateUserMutationVariables>
+> &
+  TChildProps;
+export function withCreateUser<TProps, TChildProps = {}>(
+  operationOptions?: ReactApollo.OperationOption<
+    TProps,
+    CreateUserMutation,
+    CreateUserMutationVariables,
+    CreateUserProps<TChildProps>
+  >
+) {
+  return ReactApollo.withMutation<
+    TProps,
+    CreateUserMutation,
+    CreateUserMutationVariables,
+    CreateUserProps<TChildProps>
+  >(CreateUserDocument, {
+    alias: "withCreateUser",
     ...operationOptions
   });
 }
