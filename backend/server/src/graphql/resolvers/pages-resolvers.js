@@ -37,8 +37,8 @@ export default {
     updatePage: async (_, { _id, ...rest }, { user }) => {
         try {
             await requireAuth(user);
-            const page = await Page.findOne({_id, user: user._id });
-
+            const page = await Page.findOne({ _id, user: user._id });
+            console.log('page we: ', page)
             if (!page) {
                 throw new Error('Page not found...');
             }

@@ -9,19 +9,52 @@ export default `
         token: String!
     }
 
+    type User {
+        _id: ID!
+        uusername: String!
+        uphone: String
+        ucellphone: String!
+        uemail: String!
+        upassword: String!
+        uavatar: String!
+        ufirstname: String!
+        ulastname: String
+        ubirtdate: String!
+        ugender: String!
+        ucountry: String!
+        ustate: String!
+        ucity: String!
+        ustreet: String!
+        uzip: Int!
+        ugeolocation: String!
+        uemailverified: String!
+        uactiveaccount: String!
+        ucurrentoccupation: String!
+        uranking: Int!
+        udateadmission: String!
+        ulastlogin: String!
+        createdAt: Date!
+        updatedAt: Date!
+    }
+
     type Event {
         _id: ID!
+        user: User!
         evname: String!
         evdescription: String
         evkeywords: String!
         evubication: String!
         evgeolocation: String!
-        evdatestart: String!
-        evdatefinish: String
+        evdatestart: Date!
+        evdatefinish: Date
         evtype: String!
         evimage: String!
         evvideo: String!
-        user: User!
+        evisenabled: Boolean!
+        evregisteredbyuser: String!
+        evupdatedbyuser: String
+        evdeletedbyuser: String
+        evdatedeleted: Date
         createdAt: Date!
         updatedAt: Date!
     }
@@ -81,38 +114,15 @@ export default `
 
     type Post {
         _id: ID!
+        user: User!
         ptext: String
         pimage: String
-        user: User!
-        pclaps: Int!    
-        createdAt: Date!
-        updatedAt: Date!
-    }
-
-    type User {
-        _id: ID!
-        uusername: String!
-        uphone: String
-        ucellphone: String!
-        uemail: String!
-        upassword: String!
-        uavatar: String!
-        ufirstname: String!
-        ulastname: String
-        ubirtdate: String!
-        ugender: String!
-        ucountry: String!
-        ustate: String!
-        ucity: String!
-        ustreet: String!
-        uzip: Int!
-        ugeolocation: String!
-        uemailverified: String!
-        uactiveaccount: String!
-        ucurrentoccupation: String!
-        uranking: Int!
-        udateadmission: String!
-        ulastlogin: String!
+        pclaps: Int!
+        pisenabled: Boolean!
+        pregisteredbyuser: String!
+        pupdatedbyuser: String
+        pdeletedbyuser: String
+        pdatedeleted: Date
         createdAt: Date!
         updatedAt: Date!
     }
@@ -147,50 +157,59 @@ export default `
 
     type Query {
         getEvent(_id: ID!): Event
-        getEvents: [ Event ]
-        getUserEvents: [ Event ]
+        getEvents: [Event]
+        getUserEvents: [Event]
 
         getPage(_id: ID!): Page 
-        getPages: [ Page ]
-        getUserPages: [ Page ]
+        getPages: [Page]
+        getUserPages: [Page]
         
         getPet(_id: ID!): Pet 
-        getPets: [ Pet ]
-        getUserPets: [ Pet ]
+        getPets: [Pet]
+        getUserPets: [Pet]
 
         getPost(_id: ID!): Post
-        getPosts: [ Post ]
-        getUserPosts: [ Post ]
+        getPosts: [Post]
+        getUserPosts: [Post]
 
         getUser(_id: ID!): User
-        getUsers: [ User ]
+        getUsers: [User]
 
         me: Me
         }
 
     type Mutation {
-        
         createEvent(evname: String!,
-                    evdescription: String,
-                    evkeywords: String!,
-                    evubication: String!,
-                    evgeolocation: String!,
-                    evdatestart: String!,
-                    evdatefinish: String,
-                    evtype: String!,
-                    evimage: String!,
-                    evvideo: String!): Event
+            evdescription: String,
+            evkeywords: String!,
+            evubication: String!,
+            evgeolocation: String!,
+            evdatestart: Date!,
+            evdatefinish: Date,
+            evtype: String!,
+            evimage: String!,
+            evvideo: String!,
+            evisenabled: Boolean!,
+            evregisteredbyuser: String!,
+            evupdatedbyuser: String,
+            evdeletedbyuser: String,
+            evdatedeleted: Date): Event
         updateEvent(_id: ID!,
-                    evname: String!,
-                    evdescription: String,
-                    evkeywords: String!,
-                    evubication: String!,
-                    evgeolocation: String!,
-                    evdatestart: String!,
-                    evdatefinish: String,
-                    evtype: String!,
-                    evimage: String!,
-                    evvideo: String!): Event
+            evname: String!,
+            evdescription: String,
+            evkeywords: String!,
+            evubication: String!,
+            evgeolocation: String!,
+            evdatestart: Date!,
+            evdatefinish: Date,
+            evtype: String!,
+            evimage: String!,
+            evvideo: String!,
+            evisenabled: Boolean!,
+            evregisteredbyuser: String!,
+            evupdatedbyuser: String,
+            evdeletedbyuser: String,
+            evdatedeleted: Date): Event
         deleteEvent(_id: ID!): Status
 
         createPage(pname: String!,
@@ -228,7 +247,7 @@ export default `
                     pstreet: String,
                     pzip: Int,
                     pgeolocation: String!): Page
-        deletePage(_id: ID!): Page
+        deletePage(_id: ID!): Status
 
         createPet(pechipcode: String!,
                     pename: String!,
@@ -276,15 +295,27 @@ export default `
                     pedeceased: Boolean!,
                     pegeolocation: String!): Pet
         deletePet(_id: ID!): Status
-
+        
         createPost(ptext: String,
-                    pimage: String): Post
-        updatePost(_id: ID!, 
-                    ptext: String,
-                    pimage: String): Post
+            pimage: String,
+            pclaps: Int!,
+            pisenabled: Boolean!,
+            pregisteredbyuser: String!,
+            pupdatedbyuser: String,
+            pdeletedbyuser: String,
+            pdatedeleted: Date): Post
+        updatePost(_id: ID!,
+            ptext: String,
+            pimage: String,
+            pclaps: Int!,
+            pisenabled: Boolean!,
+            pregisteredbyuser: String!,
+            pupdatedbyuser: String,
+            pdeletedbyuser: String,
+            pdatedeleted: Date): Post
         deletePost(_id: ID!): Status
 
-        createUser(uusername: String!
+        createUser(uusername: String!,
                     uphone: String!,
                     ucellphone: String,
                     uemail: String!,
@@ -307,7 +338,7 @@ export default `
                     udateadmission: String!,
                     ulastlogin: String!): Auth
         updateUser(_id: ID!, 
-                    uusername: String!
+                    uusername: String!,
                     uphone: String!,
                     ucellphone: String!,
                     uemail: String!,
@@ -329,9 +360,8 @@ export default `
                     uranking: Int!,
                     udateadmission: String!,
                     ulastlogin: String!): User
-        deleteUser(_id: ID!): User
+        deleteUser(_id: ID!): Status
         loginUser(uemail: String!, upassword: String!): Auth
-
     }
 
     schema {

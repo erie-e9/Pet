@@ -1,12 +1,20 @@
 const withTypescript = require('@zeit/next-typescript')
-// module.exports = {
-//     crossOrigin: 'anonymous'
-// }
-module.exports = withTypescript()
+const withSass = require('@zeit/next-sass');
 
-// module.exports = withCSS(withTypescript(withSass({
-//     cssModules: true,
-//     webpack: (config) => {
-//         return config
-//     }
-// })))
+module.exports = withTypescript(
+    withSass({
+        webpack(config, options) {
+          return config;
+        },
+        cssModules: true,
+        cssLoaderOptions: {
+          importLoaders: 1,
+          indentedSyntax: true
+          // localIdentName: "[local]___[hash:base64:5]",
+        },
+        sassLoaderOptions: {
+          includePaths: ["styles/", "absolute/path/b"]
+        },
+        
+    }),
+)

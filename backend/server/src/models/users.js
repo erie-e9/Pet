@@ -3,20 +3,22 @@ import { hashSync, compareSync } from 'bcrypt-nodejs';
 import jwt from 'jsonwebtoken';
 import constants from '../config/constants';
 
+const errorHelper = require('mongoose-error-helper').errorHelper;
+
 const UserSchema = new Schema({
     uusername: {
         type: String,
-        required: 'User username is required',
+        required: 'User name is required',
         unique: true,
-        minlength: [3, 'User username must be longer that 3 characters'],
+        minlength: [3, 'User name must be longer that 3 characters'],
     },
-    ufirstname: { //!!!!! checar con schema y mocks, también logitud max
+    ufirstname: { //! !!!! checar con schema y mocks, también logitud max
         type: String,
         required: 'User firstname is required',
         minlength: [3, 'User firstname must be longer that 3 characters'],
         maxlength: [15, 'User firstname is very longer']
     },
-    ulastname: { //!!!!! checar con schema y mocks, también logitud max
+    ulastname: { //! !!!! checar con schema y mocks, también logitud max
         type: String,
         // required: 'User lastname is required',
         minlength: [3, 'User lastname must be longer that 3 characters'],
@@ -25,13 +27,25 @@ const UserSchema = new Schema({
     uphone: {
         type: String,
         minlength: [9, 'User phone must be longer that 9 characters'],
-        maxlength: [30, 'User phone is very longer']
+        maxlength: [30, 'User phone is very longer'],
+        validate: {
+            validator(v) {
+              return /\d{3}-\d{3}-\d{4}/.test(v);
+            },
+            message: props => `${props.value} is not a valid phone number`
+        }
     },
     ucellphone: {
         type: String,
         required: 'User cellphone is required',
         minlength: [9, 'User cellphone must be longer that 9 characters'],
-        maxlength: [30, 'User cellphone is very longer']
+        maxlength: [30, 'User cellphone is very longer'],
+        validate: {
+            validator(v) {
+              return /\d{3}-\d{3}-\d{4}/.test(v);
+            },
+            message: props => `${props.value} is not a valid phone number`
+        }
     },
     uemail: {
         type: String,
@@ -48,6 +62,7 @@ const UserSchema = new Schema({
     uavatar: {
         type: String,
         required: 'User avatar is required',
+        minlength: [4, 'User avatar is required'],
     },
     ubirtdate: {
         type: String,
@@ -84,8 +99,7 @@ const UserSchema = new Schema({
     },
     uzip: {
         type: Number,
-        required: 'User zip is required',
-        min: [5, 'User zip must to be 5 characters'],
+        required: 'User zip is required'
         // max: [10, 'User zip is very longer']
     },
     ugeolocation: {
@@ -114,8 +128,8 @@ const UserSchema = new Schema({
     uranking: {
         type: Number, //! pediente el tipo de estrellitas
         required: 'User ranking is required',
-        min: [1, 'User only can be evaluated 1 to 10'],
-        max: [10, 'User only can be evaluated 1 to 10']
+        // min: [1, 'User only can be evaluated 1 to 10'],
+        // max: [10, 'User only can be evaluated 1 to 10'],
     },
     udateadmission: { //! pendiente cambiar a fecha
         type: String,
@@ -134,8 +148,9 @@ const UserSchema = new Schema({
 UserSchema.pre('save', function(next) {
     if (this.isModified('upassword')) {
         this.upassword = this._hashPassword(this.upassword);
-        return next(); 
+        return next();
     }
+    if (err) return errorHelper(err, next);
     return next();
 })
 
@@ -155,5 +170,19 @@ UserSchema.methods = {
     }
     
 }
+
+// Validations
+UserSchema.path('uzip').validate((uzip) => {
+    if (uzip.toString().length < 5) {
+        throw new Error('User zip must to be 5 characters')
+    } 
+    return true;
+}, 'User zip `{VALUE}` is no valid');
+
+UserSchema.path('uranking').validate((uranking) => {
+    if (uranking <= 0) {
+        throw new Error('User ranking cannot be 0')
+    }
+}, 'User ranking `{VALUE}` is no valid');
 
 export default mongoose.model('User', UserSchema);

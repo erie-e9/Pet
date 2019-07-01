@@ -6,7 +6,7 @@ mongoose.Promise = global.Promise;
 mongoose.set('debug', true);
 
 try {
-    mongoose.connect(constants.DB_URL)
+    mongoose.connect(constants.DB_URL, { useNewUrlParser: true })
 } catch (error) {
     mongoose.createConnection(constants.DB_URL)
 }

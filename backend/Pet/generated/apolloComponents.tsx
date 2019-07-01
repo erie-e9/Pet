@@ -2,6 +2,7 @@ import gql from "graphql-tag";
 import * as ReactApollo from "react-apollo";
 import * as React from "react";
 export type Maybe<T> = T | null;
+export type MaybePromise<T> = Promise<T> | T;
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -21,17 +22,22 @@ export type Auth = {
 export type Event = {
   __typename?: "Event";
   _id: Scalars["ID"];
+  user: User;
   evname: Scalars["String"];
   evdescription?: Maybe<Scalars["String"]>;
   evkeywords: Scalars["String"];
   evubication: Scalars["String"];
   evgeolocation: Scalars["String"];
-  evdatestart: Scalars["String"];
-  evdatefinish?: Maybe<Scalars["String"]>;
+  evdatestart: Scalars["Date"];
+  evdatefinish?: Maybe<Scalars["Date"]>;
   evtype: Scalars["String"];
   evimage: Scalars["String"];
   evvideo: Scalars["String"];
-  user: User;
+  evisenabled: Scalars["Boolean"];
+  evregisteredbyuser: Scalars["String"];
+  evupdatedbyuser?: Maybe<Scalars["String"]>;
+  evdeletedbyuser?: Maybe<Scalars["String"]>;
+  evdatedeleted?: Maybe<Scalars["Date"]>;
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
 };
@@ -72,7 +78,7 @@ export type Mutation = {
   deleteEvent?: Maybe<Status>;
   createPage?: Maybe<Page>;
   updatePage?: Maybe<Page>;
-  deletePage?: Maybe<Page>;
+  deletePage?: Maybe<Status>;
   createPet?: Maybe<Pet>;
   updatePet?: Maybe<Pet>;
   deletePet?: Maybe<Status>;
@@ -81,7 +87,7 @@ export type Mutation = {
   deletePost?: Maybe<Status>;
   createUser?: Maybe<Auth>;
   updateUser?: Maybe<User>;
-  deleteUser?: Maybe<User>;
+  deleteUser?: Maybe<Status>;
   loginUser?: Maybe<Auth>;
 };
 
@@ -91,11 +97,16 @@ export type MutationCreateEventArgs = {
   evkeywords: Scalars["String"];
   evubication: Scalars["String"];
   evgeolocation: Scalars["String"];
-  evdatestart: Scalars["String"];
-  evdatefinish?: Maybe<Scalars["String"]>;
+  evdatestart: Scalars["Date"];
+  evdatefinish?: Maybe<Scalars["Date"]>;
   evtype: Scalars["String"];
   evimage: Scalars["String"];
   evvideo: Scalars["String"];
+  evisenabled: Scalars["Boolean"];
+  evregisteredbyuser: Scalars["String"];
+  evupdatedbyuser?: Maybe<Scalars["String"]>;
+  evdeletedbyuser?: Maybe<Scalars["String"]>;
+  evdatedeleted?: Maybe<Scalars["Date"]>;
 };
 
 export type MutationUpdateEventArgs = {
@@ -105,11 +116,16 @@ export type MutationUpdateEventArgs = {
   evkeywords: Scalars["String"];
   evubication: Scalars["String"];
   evgeolocation: Scalars["String"];
-  evdatestart: Scalars["String"];
-  evdatefinish?: Maybe<Scalars["String"]>;
+  evdatestart: Scalars["Date"];
+  evdatefinish?: Maybe<Scalars["Date"]>;
   evtype: Scalars["String"];
   evimage: Scalars["String"];
   evvideo: Scalars["String"];
+  evisenabled: Scalars["Boolean"];
+  evregisteredbyuser: Scalars["String"];
+  evupdatedbyuser?: Maybe<Scalars["String"]>;
+  evdeletedbyuser?: Maybe<Scalars["String"]>;
+  evdatedeleted?: Maybe<Scalars["Date"]>;
 };
 
 export type MutationDeleteEventArgs = {
@@ -219,12 +235,24 @@ export type MutationDeletePetArgs = {
 export type MutationCreatePostArgs = {
   ptext?: Maybe<Scalars["String"]>;
   pimage?: Maybe<Scalars["String"]>;
+  pclaps: Scalars["Int"];
+  pisenabled: Scalars["Boolean"];
+  pregisteredbyuser: Scalars["String"];
+  pupdatedbyuser?: Maybe<Scalars["String"]>;
+  pdeletedbyuser?: Maybe<Scalars["String"]>;
+  pdatedeleted?: Maybe<Scalars["Date"]>;
 };
 
 export type MutationUpdatePostArgs = {
   _id: Scalars["ID"];
   ptext?: Maybe<Scalars["String"]>;
   pimage?: Maybe<Scalars["String"]>;
+  pclaps: Scalars["Int"];
+  pisenabled: Scalars["Boolean"];
+  pregisteredbyuser: Scalars["String"];
+  pupdatedbyuser?: Maybe<Scalars["String"]>;
+  pdeletedbyuser?: Maybe<Scalars["String"]>;
+  pdatedeleted?: Maybe<Scalars["Date"]>;
 };
 
 export type MutationDeletePostArgs = {
@@ -349,10 +377,15 @@ export type Pet = {
 export type Post = {
   __typename?: "Post";
   _id: Scalars["ID"];
+  user: User;
   ptext?: Maybe<Scalars["String"]>;
   pimage?: Maybe<Scalars["String"]>;
-  user: User;
   pclaps: Scalars["Int"];
+  pisenabled: Scalars["Boolean"];
+  pregisteredbyuser: Scalars["String"];
+  pupdatedbyuser?: Maybe<Scalars["String"]>;
+  pdeletedbyuser?: Maybe<Scalars["String"]>;
+  pdatedeleted?: Maybe<Scalars["Date"]>;
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
 };
@@ -429,12 +462,12 @@ export type User = {
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
 };
-export type LoginUserMutationVariables = {
-  email: Scalars["String"];
-  password: Scalars["String"];
+export type LoginMutationVariables = {
+  uemail: Scalars["String"];
+  upassword: Scalars["String"];
 };
 
-export type LoginUserMutation = { __typename?: "Mutation" } & {
+export type LoginMutation = { __typename?: "Mutation" } & {
   loginUser: Maybe<{ __typename?: "Auth" } & Pick<Auth, "token">>;
 };
 
@@ -467,51 +500,83 @@ export type CreateUserMutation = { __typename?: "Mutation" } & {
   createUser: Maybe<{ __typename?: "Auth" } & Pick<Auth, "token">>;
 };
 
-export const LoginUserDocument = gql`
-  mutation loginUser($email: String!, $password: String!) {
-    loginUser(uemail: $email, upassword: $password) {
+export type MeQueryVariables = {};
+
+export type MeQuery = { __typename?: "Query" } & {
+  me: Maybe<
+    { __typename?: "Me" } & Pick<
+      Me,
+      | "_id"
+      | "uusername"
+      | "uphone"
+      | "ucellphone"
+      | "uemail"
+      | "upassword"
+      | "uavatar"
+      | "ufirstname"
+      | "ulastname"
+      | "ubirtdate"
+      | "ugender"
+      | "ucountry"
+      | "ustate"
+      | "ucity"
+      | "ustreet"
+      | "uzip"
+      | "ugeolocation"
+      | "uemailverified"
+      | "uactiveaccount"
+      | "ucurrentoccupation"
+      | "uranking"
+      | "udateadmission"
+      | "ulastlogin"
+      | "createdAt"
+      | "updatedAt"
+    >
+  >;
+};
+
+export const LoginDocument = gql`
+  mutation Login($uemail: String!, $upassword: String!) {
+    loginUser(uemail: $uemail, upassword: $upassword) {
       token
     }
   }
 `;
-export type LoginUserMutationFn = ReactApollo.MutationFn<
-  LoginUserMutation,
-  LoginUserMutationVariables
+export type LoginMutationFn = ReactApollo.MutationFn<
+  LoginMutation,
+  LoginMutationVariables
 >;
-export type LoginUserComponentProps = Omit<
-  Omit<
-    ReactApollo.MutationProps<LoginUserMutation, LoginUserMutationVariables>,
-    "mutation"
-  >,
-  "variables"
-> & { variables?: LoginUserMutationVariables };
+export type LoginComponentProps = Omit<
+  ReactApollo.MutationProps<LoginMutation, LoginMutationVariables>,
+  "mutation"
+>;
 
-export const LoginUserComponent = (props: LoginUserComponentProps) => (
-  <ReactApollo.Mutation<LoginUserMutation, LoginUserMutationVariables>
-    mutation={LoginUserDocument}
+export const LoginComponent = (props: LoginComponentProps) => (
+  <ReactApollo.Mutation<LoginMutation, LoginMutationVariables>
+    mutation={LoginDocument}
     {...props}
   />
 );
 
-export type LoginUserProps<TChildProps = {}> = Partial<
-  ReactApollo.MutateProps<LoginUserMutation, LoginUserMutationVariables>
+export type LoginProps<TChildProps = {}> = Partial<
+  ReactApollo.MutateProps<LoginMutation, LoginMutationVariables>
 > &
   TChildProps;
-export function withLoginUser<TProps, TChildProps = {}>(
+export function withLogin<TProps, TChildProps = {}>(
   operationOptions?: ReactApollo.OperationOption<
     TProps,
-    LoginUserMutation,
-    LoginUserMutationVariables,
-    LoginUserProps<TChildProps>
+    LoginMutation,
+    LoginMutationVariables,
+    LoginProps<TChildProps>
   >
 ) {
   return ReactApollo.withMutation<
     TProps,
-    LoginUserMutation,
-    LoginUserMutationVariables,
-    LoginUserProps<TChildProps>
-  >(LoginUserDocument, {
-    alias: "withLoginUser",
+    LoginMutation,
+    LoginMutationVariables,
+    LoginProps<TChildProps>
+  >(LoginDocument, {
+    alias: "withLogin",
     ...operationOptions
   });
 }
@@ -573,12 +638,9 @@ export type CreateUserMutationFn = ReactApollo.MutationFn<
   CreateUserMutationVariables
 >;
 export type CreateUserComponentProps = Omit<
-  Omit<
-    ReactApollo.MutationProps<CreateUserMutation, CreateUserMutationVariables>,
-    "mutation"
-  >,
-  "variables"
-> & { variables?: CreateUserMutationVariables };
+  ReactApollo.MutationProps<CreateUserMutation, CreateUserMutationVariables>,
+  "mutation"
+>;
 
 export const CreateUserComponent = (props: CreateUserComponentProps) => (
   <ReactApollo.Mutation<CreateUserMutation, CreateUserMutationVariables>
@@ -606,6 +668,68 @@ export function withCreateUser<TProps, TChildProps = {}>(
     CreateUserProps<TChildProps>
   >(CreateUserDocument, {
     alias: "withCreateUser",
+    ...operationOptions
+  });
+}
+export const MeDocument = gql`
+  query Me {
+    me {
+      _id
+      uusername
+      uphone
+      ucellphone
+      uemail
+      upassword
+      uavatar
+      ufirstname
+      ulastname
+      ubirtdate
+      ugender
+      ucountry
+      ustate
+      ucity
+      ustreet
+      uzip
+      ugeolocation
+      uemailverified
+      uactiveaccount
+      ucurrentoccupation
+      uranking
+      udateadmission
+      ulastlogin
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export type MeComponentProps = Omit<
+  ReactApollo.QueryProps<MeQuery, MeQueryVariables>,
+  "query"
+>;
+
+export const MeComponent = (props: MeComponentProps) => (
+  <ReactApollo.Query<MeQuery, MeQueryVariables> query={MeDocument} {...props} />
+);
+
+export type MeProps<TChildProps = {}> = Partial<
+  ReactApollo.DataProps<MeQuery, MeQueryVariables>
+> &
+  TChildProps;
+export function withMe<TProps, TChildProps = {}>(
+  operationOptions?: ReactApollo.OperationOption<
+    TProps,
+    MeQuery,
+    MeQueryVariables,
+    MeProps<TChildProps>
+  >
+) {
+  return ReactApollo.withQuery<
+    TProps,
+    MeQuery,
+    MeQueryVariables,
+    MeProps<TChildProps>
+  >(MeDocument, {
+    alias: "withMe",
     ...operationOptions
   });
 }

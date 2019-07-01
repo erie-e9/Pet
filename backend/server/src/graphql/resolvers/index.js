@@ -24,23 +24,18 @@ export default {
         getEvent: EventsResolvers.getEvent,
         getEvents: EventsResolvers.getEvents,
         getUserEvents: EventsResolvers.getUserEvents,
-
         getPage: PagesResolvers.getPage,
         getPages: PagesResolvers.getPages,
         getUserPages: PagesResolvers.getUserPages,
-
         getPet: PetsResolvers.getPet,
         getPets: PetsResolvers.getPets,
         getUserPets: PetsResolvers.getUserPets,
-
         getPost: PostsResolvers.getPost,
         getPosts: PostsResolvers.getPosts,
         getUserPosts: PostsResolvers.getUserPosts,
-        
         getUser: UsersResolvers.getUser,
         getUsers: UsersResolvers.getUsers,
         me: UsersResolvers.me,
-
     },
     Mutation: {
         createEvent: EventsResolvers.createEvent,

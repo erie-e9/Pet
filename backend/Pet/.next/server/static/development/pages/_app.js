@@ -113,6 +113,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! isomorphic-unfetch */ "isomorphic-unfetch");
 /* harmony import */ var isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _isBrowser__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./isBrowser */ "./lib/isBrowser.ts");
+/* harmony import */ var apollo_link_error__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! apollo-link-error */ "apollo-link-error");
+/* harmony import */ var apollo_link_error__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(apollo_link_error__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! next/router */ "next/router");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_7__);
+
+// tslint:disable-next-line:prettier
+
 
 
 
@@ -122,7 +129,7 @@ __webpack_require__.r(__webpack_exports__);
 var apolloClient = null; // Polyfill fetch() on the server (used by apollo-client)
 
 if (!_isBrowser__WEBPACK_IMPORTED_MODULE_5__["isBrowser"]) {
-  //@ts-ignore
+  // @ts-ignore
   global.fetch = isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_4___default.a;
 }
 
@@ -131,21 +138,43 @@ function create(initialState, _ref) {
   var httpLink = Object(apollo_link_http__WEBPACK_IMPORTED_MODULE_2__["createHttpLink"])({
     // ERT: 23/05/2019
     // Change GraphQL uri and credentials
-    uri: 'http://localhost:4000/graphql',
-    credentials: 'same-origin' // credentials: 'include'
-    // uri: 'https://api.graph.cool/simple/v1/cj5geu3slxl7t0127y8sity9r',
+    uri: "http://localhost:4000/graphql",
+    // credentials: "same-origin"
+    credentials: "include" // uri: 'https://api.graph.cool/simple/v1/cj5geu3slxl7t0127y8sity9r',
     // credentials: 'same-origin'
 
   });
-  var authLink = Object(apollo_link_context__WEBPACK_IMPORTED_MODULE_3__["setContext"])(function (_, _ref2) {
-    var headers = _ref2.headers;
-    var token = getToken();
+  var errorLink = Object(apollo_link_error__WEBPACK_IMPORTED_MODULE_6__["onError"])(function (_ref2) {
+    var graphQLErrors = _ref2.graphQLErrors,
+        networkError = _ref2.networkError;
+
+    if (graphQLErrors) {
+      graphQLErrors.map(function (_ref3) {
+        var message = _ref3.message,
+            locations = _ref3.locations,
+            path = _ref3.path;
+        console.log("[GraphQL error]: Message: ".concat(message, ", Location : ").concat(locations, ", Path: ").concat(path));
+
+        if (_isBrowser__WEBPACK_IMPORTED_MODULE_5__["isBrowser"] && message.includes("Unauthorized")) {
+          next_router__WEBPACK_IMPORTED_MODULE_7___default.a.replace("/login");
+        }
+      });
+    }
+
+    if (networkError) console.log("[Network error]: ".concat(networkError));
+  });
+  var authLink = Object(apollo_link_context__WEBPACK_IMPORTED_MODULE_3__["setContext"])(function (_, _ref4) {
+    var headers = _ref4.headers;
+    var token = getToken(); // const genericToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Y2VkNzM2MjBmMWJjZTgwZDQzNzBhN2UiLCJpYXQiOjE1NTkwNjU0NDJ9.IZxdkDmRpJUze58vG1gnx0kF8LtQBNa2vbAQqjXdGSE'
+
+    var genericToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDE2MzFlZDg1NWE0YjU0YTAyNTllZjAiLCJpYXQiOjE1NjE3NDkwOTF9.smF1ARA89WpsxfmEJAGWqTh4Qu13q5US_99ktgxVwDc";
     return {
       headers: Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_0__["default"])({}, headers, {
         // ERT: 23/05/2019
         // Change token to cookie
-        // cookie: token ? `qid=${token}` : '' 
-        authorization: token ? "Bearer ".concat(token) : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Y2VkNzM2MjBmMWJjZTgwZDQzNzBhN2UiLCJpYXQiOjE1NTkwNjU0NDJ9.IZxdkDmRpJUze58vG1gnx0kF8LtQBNa2vbAQqjXdGSE'
+        // cookie: token ? `qid=${token}` : ''
+        authorization: token ? "Bearer ".concat(token) : "Bearer ".concat(genericToken) // authorization: `Bearer ${token}`
+
       })
     };
   }); // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
@@ -154,7 +183,7 @@ function create(initialState, _ref) {
     connectToDevTools: _isBrowser__WEBPACK_IMPORTED_MODULE_5__["isBrowser"],
     ssrMode: !_isBrowser__WEBPACK_IMPORTED_MODULE_5__["isBrowser"],
     // Disables forceFetch on the server (so queries are only run once)
-    link: authLink.concat(httpLink),
+    link: errorLink.concat(authLink.concat(httpLink)),
     cache: new apollo_boost__WEBPACK_IMPORTED_MODULE_1__["InMemoryCache"]().restore(initialState || {})
   });
 }
@@ -190,6 +219,34 @@ var isBrowser = false;
 
 /***/ }),
 
+/***/ "./lib/redirect.ts":
+/*!*************************!*\
+  !*** ./lib/redirect.ts ***!
+  \*************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! next/router */ "next/router");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ __webpack_exports__["default"] = (function (context, target) {
+  if (context.res) {
+    // server
+    // 303: "See other"
+    context.res.writeHead(303, {
+      Location: target
+    });
+    context.res.end();
+  } else {
+    // In the browser, we just pretend like this never even happened ;)
+    next_router__WEBPACK_IMPORTED_MODULE_0___default.a.replace(target);
+  }
+});
+
+/***/ }),
+
 /***/ "./lib/withApollo.tsx":
 /*!****************************!*\
   !*** ./lib/withApollo.tsx ***!
@@ -222,6 +279,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(next_head__WEBPACK_IMPORTED_MODULE_14__);
 /* harmony import */ var _initApollo__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./initApollo */ "./lib/initApollo.ts");
 /* harmony import */ var _isBrowser__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./isBrowser */ "./lib/isBrowser.ts");
+/* harmony import */ var _redirect__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./redirect */ "./lib/redirect.ts");
 
 
 
@@ -232,7 +290,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _jsxFileName = "D:\\code\\exp\\Pet\\backend\\Pet\\lib\\withApollo.tsx";
+
 
 
 
@@ -243,7 +301,7 @@ var _jsxFileName = "D:\\code\\exp\\Pet\\backend\\Pet\\lib\\withApollo.tsx";
 
 function parseCookies(req) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  return cookie__WEBPACK_IMPORTED_MODULE_10___default.a.parse(req ? req.headers.cookie || '' : document.cookie, options);
+  return cookie__WEBPACK_IMPORTED_MODULE_10___default.a.parse(req ? req.headers.cookie || "" : document.cookie, options);
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (function (App) {
@@ -270,10 +328,10 @@ function parseCookies(req) {
                   apollo = Object(_initApollo__WEBPACK_IMPORTED_MODULE_15__["default"])({}, {
                     // ERT: 23/05/2019
                     // Change token request to qid request
+                    // getToken: () => parseCookies(req).qid
                     getToken: function getToken() {
-                      return parseCookies(req).qid;
-                    } // getToken: () => parseCookies(req).token
-
+                      return parseCookies(req).token;
+                    }
                   });
                   ctx.ctx.apolloClient = apollo;
                   appProps = {};
@@ -299,7 +357,7 @@ function parseCookies(req) {
 
                 case 10:
                   if (_isBrowser__WEBPACK_IMPORTED_MODULE_16__["isBrowser"]) {
-                    _context.next = 20;
+                    _context.next = 21;
                     break;
                   }
 
@@ -308,16 +366,11 @@ function parseCookies(req) {
                   return Object(react_apollo__WEBPACK_IMPORTED_MODULE_13__["getDataFromTree"])(react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(App, Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_2__["default"])({}, appProps, {
                     Component: Component,
                     router: router,
-                    apolloClient: apollo,
-                    __source: {
-                      fileName: _jsxFileName,
-                      lineNumber: 57
-                    },
-                    __self: this
+                    apolloClient: apollo
                   })));
 
                 case 14:
-                  _context.next = 19;
+                  _context.next = 20;
                   break;
 
                 case 16:
@@ -326,26 +379,30 @@ function parseCookies(req) {
                   // Prevent Apollo Client GraphQL errors from crashing SSR.
                   // Handle them in components via the data.error prop:
                   // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
-                  console.error('Error while running `getDataFromTree`', _context.t0);
+                  console.error("Error while running `getDataFromTree`", _context.t0);
 
-                case 19:
+                  if (_context.t0.message.includes("Unauthorized")) {
+                    Object(_redirect__WEBPACK_IMPORTED_MODULE_17__["default"])(ctx.ctx, "/login");
+                  }
+
+                case 20:
                   // getDataFromTree does not call componentWillUnmount
                   // head side effect therefore need to be cleared manually
                   next_head__WEBPACK_IMPORTED_MODULE_14___default.a.rewind();
 
-                case 20:
+                case 21:
                   // Extract query data from the Apollo's store
                   apolloState = apollo.cache.extract();
                   return _context.abrupt("return", Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_1__["default"])({}, appProps, {
                     apolloState: apolloState
                   }));
 
-                case 22:
+                case 23:
                 case "end":
                   return _context.stop();
               }
             }
-          }, _callee, this, [[11, 16]]);
+          }, _callee, null, [[11, 16]]);
         }));
 
         function getInitialProps(_x) {
@@ -376,12 +433,7 @@ function parseCookies(req) {
       key: "render",
       value: function render() {
         return react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(App, Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_2__["default"])({}, this.props, {
-          apolloClient: this.apolloClient,
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 99
-          },
-          __self: this
+          apolloClient: this.apolloClient
         }));
       }
     }]);
@@ -1346,26 +1398,23 @@ exports.createUrl = createUrl;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/extends */ "./node_modules/@babel/runtime-corejs2/helpers/esm/extends.js");
-/* harmony import */ var _babel_runtime_corejs2_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/classCallCheck */ "./node_modules/@babel/runtime-corejs2/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/createClass */ "./node_modules/@babel/runtime-corejs2/helpers/esm/createClass.js");
-/* harmony import */ var _babel_runtime_corejs2_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/possibleConstructorReturn */ "./node_modules/@babel/runtime-corejs2/helpers/esm/possibleConstructorReturn.js");
-/* harmony import */ var _babel_runtime_corejs2_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/getPrototypeOf */ "./node_modules/@babel/runtime-corejs2/helpers/esm/getPrototypeOf.js");
-/* harmony import */ var _babel_runtime_corejs2_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/inherits */ "./node_modules/@babel/runtime-corejs2/helpers/esm/inherits.js");
-/* harmony import */ var next_app__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! next/app */ "./node_modules/next/app.js");
-/* harmony import */ var next_app__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(next_app__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var react_apollo__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-apollo */ "react-apollo");
-/* harmony import */ var react_apollo__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_apollo__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _lib_withApollo__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/withApollo */ "./lib/withApollo.tsx");
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/classCallCheck */ "./node_modules/@babel/runtime-corejs2/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/createClass */ "./node_modules/@babel/runtime-corejs2/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/possibleConstructorReturn */ "./node_modules/@babel/runtime-corejs2/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/getPrototypeOf */ "./node_modules/@babel/runtime-corejs2/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/inherits */ "./node_modules/@babel/runtime-corejs2/helpers/esm/inherits.js");
+/* harmony import */ var next_app__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! next/app */ "./node_modules/next/app.js");
+/* harmony import */ var next_app__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(next_app__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var react_apollo__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-apollo */ "react-apollo");
+/* harmony import */ var react_apollo__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_apollo__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _lib_withApollo__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/withApollo */ "./lib/withApollo.tsx");
 
 
 
 
 
-
-var _jsxFileName = "D:\\code\\exp\\Pet\\backend\\Pet\\pages\\_app.tsx";
 
 
 
@@ -1374,48 +1423,31 @@ var _jsxFileName = "D:\\code\\exp\\Pet\\backend\\Pet\\pages\\_app.tsx";
 var MyApp =
 /*#__PURE__*/
 function (_App) {
-  Object(_babel_runtime_corejs2_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_5__["default"])(MyApp, _App);
+  Object(_babel_runtime_corejs2_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(MyApp, _App);
 
   function MyApp() {
-    Object(_babel_runtime_corejs2_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, MyApp);
+    Object(_babel_runtime_corejs2_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, MyApp);
 
-    return Object(_babel_runtime_corejs2_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__["default"])(this, Object(_babel_runtime_corejs2_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(MyApp).apply(this, arguments));
+    return Object(_babel_runtime_corejs2_helpers_esm_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(this, Object(_babel_runtime_corejs2_helpers_esm_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(MyApp).apply(this, arguments));
   }
 
-  Object(_babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(MyApp, [{
+  Object(_babel_runtime_corejs2_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(MyApp, [{
     key: "render",
     value: function render() {
       var _this$props = this.props,
           Component = _this$props.Component,
           pageProps = _this$props.pageProps,
           apolloClient = _this$props.apolloClient;
-      return react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(next_app__WEBPACK_IMPORTED_MODULE_6__["Container"], {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 10
-        },
-        __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(react_apollo__WEBPACK_IMPORTED_MODULE_8__["ApolloProvider"], {
-        client: apolloClient,
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 11
-        },
-        __self: this
-      }, react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(Component, Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, pageProps, {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 12
-        },
-        __self: this
-      }))));
+      return react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(next_app__WEBPACK_IMPORTED_MODULE_5__["Container"], null, react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(react_apollo__WEBPACK_IMPORTED_MODULE_7__["ApolloProvider"], {
+        client: apolloClient
+      }, react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(Component, pageProps)));
     }
   }]);
 
   return MyApp;
-}(next_app__WEBPACK_IMPORTED_MODULE_6___default.a);
+}(next_app__WEBPACK_IMPORTED_MODULE_5___default.a);
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(_lib_withApollo__WEBPACK_IMPORTED_MODULE_9__["default"])(MyApp));
+/* harmony default export */ __webpack_exports__["default"] = (Object(_lib_withApollo__WEBPACK_IMPORTED_MODULE_8__["default"])(MyApp));
 
 /***/ }),
 
@@ -1450,6 +1482,17 @@ module.exports = require("apollo-boost");
 /***/ (function(module, exports) {
 
 module.exports = require("apollo-link-context");
+
+/***/ }),
+
+/***/ "apollo-link-error":
+/*!************************************!*\
+  !*** external "apollo-link-error" ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("apollo-link-error");
 
 /***/ }),
 

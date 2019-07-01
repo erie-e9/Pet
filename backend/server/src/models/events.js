@@ -1,22 +1,25 @@
 import mongoose, { Schema } from 'mongoose';
+const validators = require('mongoose-validators');
 
 const EventSchema = new Schema({
     evname: {
         type: String,
         required: 'Event name is required',
-        minlength: [1, 'Event name must be longer that 1 character'],
-        maxlength: [100, 'Event name is very longer']
+        minlength: [3, 'Event name must be longer that 3 character'],
+        maxlength: [100, 'Event name is very longer'],
+        validate: [validators.isLength(3, 100)]
     },
     evdescription: {
         type: String,
-        minlength: [1, 'Event description must be longer that 1 character'],
-        maxlength: [500, 'Event description is very longer']
+        minlength: [3, 'Event description must be longer that 3 characters'],
+        maxlength: [500, 'Event description is very longer'],
+        validate: [validators.isLength(3, 500)]
     },
     evkeywords: {
         type: String,
         required: 'Event image is required',
     },
-    evubication: { //! pendiente saber si se cambiar por address
+    evubication: {
         type: String,
         required: 'Event ubication is required',
     },
@@ -25,11 +28,13 @@ const EventSchema = new Schema({
         required: 'Event geolocation is required',
     },
     evdatestart: {
-        type: String,
+        type: Date,
         required: 'Event date start is required',
+        validate: [validators.isDate()]
     },
     evdatefinish: {
-        type: String,
+        type: Date,
+        validate: [validators.isDate()]
     },
     evtype: {
         type: String,
@@ -43,12 +48,31 @@ const EventSchema = new Schema({
     },
     evvideo: {
         type: String,
-        // required: 'Event video is required',
+        required: 'Event video is required',
+    },
+    evisenabled: {
+        type: Boolean,
+        required: 'Event isenabled is required',
+        default: false
+    },
+    evregisteredbyuser: {
+        type: String,
+        required: 'Event registeredbyuser is required'
+    },
+    evupdatedbyuser: {
+        type: String,
+    },
+    evdeletedbyuser: {
+        type: String,
+    },
+    evdatedeleted: {
+        type: Date,
+        validate: [validators.isDate()]
     },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
 }, { timestamps: true })
 
 export default mongoose.model('Event', EventSchema);

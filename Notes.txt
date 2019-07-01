@@ -1,6 +1,30 @@
 Links: [
   Competencias: http://www.cuidadoconelperro.cl/programa-2/
   Relaciones BD: https://www.uno-de-piera.com/relaciones-en-bases-de-datos-mysql/
+  Mongoose validations: https://vegibit.com/mongoose-validation-examples/
+]
+
+Faltantes: [
+ Mutations {
+  Forgot password  // Server
+  Change password // Server
+  Confirm User // Server
+ }
+
+ Queries {
+  [*User] //Client
+ }
+
+ Basics {
+  User restriction
+  i18n
+  Dynamic theme
+  Dark theme
+  Upload files
+  SEO
+  PWA
+  Real Responsive design
+ }
 ]
 
 mutation{
@@ -51,4 +75,13 @@ uranking
 udateadmission
 ulastlogin
   }
+}
+
+
+Cambios generales a las graphQL API realizadas: {
+
+  Error: DeprecationWarning: current URL string parser is deprecated, and will be removed in a future version. To use the new parser,
+    pass option { useNewUrlParser: true } to MongoClient.connect.
+  Archivo: db.js
+  Solución: mongoose.connect(constants.DB_URL, { useNewUrlParser: true })
 }
