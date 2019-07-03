@@ -31,7 +31,8 @@ const ssrCache = new LRUCache({
   maxAge: 1000 * 60 * 60 // 1hour
 });
 
-const getCacheKey = function getCacheKey(req: any) {
+// @ts-ignore
+const getCacheKey = function getCacheKey(req) {
   return `${req.url}`;
 };
 
@@ -57,10 +58,14 @@ const buildId = isProd
 // @ts-ignore
 // @prettier-ignore
 const renderAndCache = function renderAndCache(
-  req: any,
-  res: any,
-  pagePath: any,
-  queryParams: any
+  // @ts-ignore
+  req,
+  // @ts-ignore
+  res,
+  // @ts-ignore
+  pagePath,
+  // @ts-ignore
+  queryParams
 ) {
   const key = getCacheKey(req);
 
@@ -71,8 +76,9 @@ const renderAndCache = function renderAndCache(
   }
   // With express
   app
-    .renderToHTML(req, res, pagePath, queryParams)
-    .then((html: any) => {
+    // .renderToHTML(req, res, pagePath, queryParams)
+    // @ts-ignore
+    .then(html => {
       if (!isDev) {
         console.log(`CACHE MISS: ${key}`);
         ssrCache.set(key, html);
@@ -87,7 +93,8 @@ const renderAndCache = function renderAndCache(
         return handler(req, res);
       });
 
-      function shouldCompress(req: any, res: any) {
+      // @ts-ignore
+      function shouldCompress(req, res) {
         if (req.headers["x-no-compression"]) {
           // don't compress responses with this request header
           return false;
@@ -142,35 +149,42 @@ app.prepare().then(() => {
   server.use(helmet());
   server.use(routerHandler);
 
-  server.get(`/favicon.ico`, (req: any, res: any) =>
+  // @ts-ignore
+  server.get(`/favicon.ico`, (req, res) =>
     app.serveStatic(req, res, path.resolve("./static/icons/favicon.ico"))
   );
 
-  server.get("/sw.js", (req: any, res: any) =>
+  // @ts-ignore
+  server.get("/sw.js", (req, res) =>
     app.serveStatic(req, res, path.resolve("./.next/sw.js"))
   );
 
-  server.get("/manifest.html", (req: any, res: any) =>
+  // @ts-ignore
+  server.get("/manifest.html", (req, res) =>
     app.serveStatic(req, res, path.resolve("./.next/manifest.html"))
   );
 
-  server.get("/manifest.appcache", (req: any, res: any) =>
+  // @ts-ignore
+  server.get("/manifest.appcache", (req, res) =>
     app.serveStatic(req, res, path.resolve("./.next/manifest.appcache"))
   );
 
   if (isProd) {
-    server.get("/_next/-/app.js", (req: any, res: any) =>
+    // @ts-ignore
+    server.get("/_next/-/app.js", (req, res) =>
       app.serveStatic(req, res, path.resolve("./.next/app.js"))
     );
 
     const hash = buildId;
 
-    server.get(`/_next/${hash}/app.js`, (req: any, res: any) =>
+    // @ts-ignore
+    server.get(`/_next/${hash}/app.js`, (req, res) =>
       app.serveStatic(req, res, path.resolve("./.next/app.js"))
     );
   }
 
-  server.get("*", (req: any, res: any) => handle(req, res));
+  // @ts-ignore
+  server.get("*", (req, res) => handle(req, res));
 
   // server.listen(port, host, err => {
   //   if (err) {
