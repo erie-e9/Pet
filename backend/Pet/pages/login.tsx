@@ -29,7 +29,8 @@ export default () => {
   return (
     <Layout
       title="Login | Next.js + TypeScript Example"
-      description="login page">
+      description="login page"
+    >
       <h2>Register now</h2>
       <LoginComponent>
         {login => (

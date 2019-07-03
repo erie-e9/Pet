@@ -32,10 +32,10 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <link
+          {/* <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
-          />
+          /> */}
           {/* {this.props.styleTags} */}
         </Head>
         <body>

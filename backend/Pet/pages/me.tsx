@@ -42,13 +42,15 @@ export default () => {
                 ? `${data.me.ufirstname} ${data.me.ulastname}`
                 : "Loading"}
             </H1Text>
-            <PText>Username: {data.me.uusername}</PText>
-            <PText>Phone: {data.me.uphone}</PText>
-            <PText>Cellphone: {data.me.ucellphone}</PText>
-            <PText>Email: {data.me.uemail}</PText>
-            <PText>Avatar: {data.me.uavatar}</PText>
-            <PText>Ranking: {data.me.uranking}</PText>
-            <PText>Current occupation: {data.me.ucurrentoccupation}</PText>
+            <PText>Username: {data ? data.me.uusername : ""}</PText>
+            <PText>Phone: {data ? data.me.uphone : ""}</PText>
+            <PText>Cellphone: {data ? data.me.ucellphone : ""}</PText>
+            <PText>Email: {data ? data.me.uemail : ""}</PText>
+            <PText>Avatar: {data ? data.me.uavatar : ""}</PText>
+            <PText>Ranking: {data ? data.me.uranking : ""}</PText>
+            <PText>
+              Current occupation: {data ? data.me.ucurrentoccupation : ""}
+            </PText>
           </div>
         )}
       </MeComponent>

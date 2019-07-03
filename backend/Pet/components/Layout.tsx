@@ -64,7 +64,6 @@ const Layout: React.FunctionComponent<Props> = ({
 }) => (
   <Container>
     <Head>
-      {/* prettier-ignore */}
       <title>{title}</title>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
