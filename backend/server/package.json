@@ -31,7 +31,7 @@
     "mongoose-error-helper": "^0.0.2",
     "mongoose-validator": "^2.1.0",
     "mongoose-validators": "^0.1.0",
-    "sequelize": "^5.8.7"
+    "sequelize": "^5.15.1"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",
