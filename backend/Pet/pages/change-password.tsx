@@ -4,9 +4,11 @@ import Layout from "../components/Layout";
 import { InputField } from "../commons/formControls/Input/InputField";
 import { LoginComponent } from "../generated/apolloComponents";
 import Router from "next/router";
-import { NextContext } from "next";
+import { NextPageContext } from "next";
 
-const ChangePassword = ({ token }: { token: string }) => {
+// @ts-ignore
+// const ChangePassword = ({ token }: { token: string }) => {
+const ChangePassword = () => {
   return (
     <Layout
       title="Change password | Next.js + TypeScript Example"
@@ -19,7 +21,8 @@ const ChangePassword = ({ token }: { token: string }) => {
             validateOnBlur={false}
             validateOnChange={false}
             onSubmit={async data => {
-              const response = await changePassword({
+              console.log("data we", data);
+              const response: any = await changePassword({
                 // variables: {
                 //     data: {
                 //         upassword: data.upassword,
@@ -27,7 +30,9 @@ const ChangePassword = ({ token }: { token: string }) => {
                 //     }
                 // }
               })
+                // @ts-ignore
                 .catch(error => console.log(error))
+                .then(() => console.log("response", response))
                 .then(() => Router.push("/"));
             }}
             initialValues={{
@@ -55,7 +60,7 @@ const ChangePassword = ({ token }: { token: string }) => {
 
 ChangePassword.getInitialProps = ({
   query: { token }
-}: NextContext<{ token: string }>) => {
+}: NextPageContext<{ token: string }>) => {
   return {
     token
   };

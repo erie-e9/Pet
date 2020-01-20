@@ -1,3 +1,5 @@
+backend/Pet/**/*
+./backend/Pet/.next/*
 backend/server/node_modules/**/*
 frontend/app/node_modules/**/*
 frontend/app/.expo/*

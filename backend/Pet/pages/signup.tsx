@@ -45,11 +45,12 @@ export default () => {
                 data.uranking = cero;
               }
               try {
-                console.log("data we: ", data);
+                // console.log("data we: ", data);
                 const response = await signup({
                   variables: data
                 });
 
+                // tslint:disable-next-line: no-floating-promises
                 Router.push("/check-email");
               } catch (error) {
                 // tslint:disable-next-line:prettier

@@ -75,8 +75,8 @@ export default {
                     });
                 }
                 if (!user) {
-                    throw new UserInputError(`Email ${uemail} is incorrect, maybe you want to sign up`,{
-                        uemail: `Email ${uemail} is incorrect, maybe you want to sign up`
+                    throw new UserInputError(`Email ${uemail} is incorrect, maybe you want to sign it up`,{
+                        uemail: `Email ${uemail} is incorrect, maybe you want to sign it up`
                     })
                 // throw new ApolloError('error al crear ', 503);
                 }

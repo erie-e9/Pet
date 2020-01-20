@@ -5,9 +5,9 @@
 // import User from 'path/to/interfaces';
 
 export type User = {
-  id: number,
-  name: string,
-}
+  id: number;
+  name: string;
+};
 
 // export default interface IDataObject {
 //   id: number

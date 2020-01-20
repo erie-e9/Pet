@@ -34,9 +34,15 @@ export const InputField = ({
       />
       {errorMessage && (
         <div
-          style={{ color: "#989898", fontSize: 11, fontFamily: "sans-serif" }}
+          style={{
+            color: "#989898",
+            fontSize: 11,
+            fontFamily: "sans-serif",
+            display: "-webkit-inline-box",
+            margin: "0.5em"
+          }}
         >
-          {errorMessage ? errorMessage : ""}
+          <p>{errorMessage ? errorMessage : ""}</p>
         </div>
       )}
     </div>

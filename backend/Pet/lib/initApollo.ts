@@ -24,8 +24,8 @@ function create(initialState: any, { getToken }: Options) {
     // ERT: 23/05/2019
     // Change GraphQL uri and credentials
     uri: "http://localhost:4000/graphql",
-    // credentials: "same-origin"
-    credentials: "include"
+    credentials: "same-origin"
+    // credentials: "include"
     // uri: 'https://api.graph.cool/simple/v1/cj5geu3slxl7t0127y8sity9r',
     // credentials: 'same-origin'
   });
@@ -49,7 +49,7 @@ function create(initialState: any, { getToken }: Options) {
     const token = getToken();
     // const genericToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Y2VkNzM2MjBmMWJjZTgwZDQzNzBhN2UiLCJpYXQiOjE1NTkwNjU0NDJ9.IZxdkDmRpJUze58vG1gnx0kF8LtQBNa2vbAQqjXdGSE'
     const genericToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDE2MzFlZDg1NWE0YjU0YTAyNTllZjAiLCJpYXQiOjE1NjE3NDkwOTF9.smF1ARA89WpsxfmEJAGWqTh4Qu13q5US_99ktgxVwDc";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDI3ZTA0MzU5YjU0NTIyMzBmNjRlMzMiLCJpYXQiOjE1NjI5NTgyMzZ9.uMM1XXLNxplc9m6llfdtu2Pp7RfTH1UYnEqNDi461tc";
     return {
       headers: {
         ...headers,

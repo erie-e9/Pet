@@ -2,7 +2,9 @@
     "rulesDirectory": ["tslint-plugin-prettier"],
     "extends": ["tslint-config-standard", "tslint-config-prettier"],
     "rules": {
-      "prettier": true,
-      "no-unexpected-multiline": "error"
+      "max-line-length": {
+        "options": [150]
+    },
+      "prettier": true
     }
   }

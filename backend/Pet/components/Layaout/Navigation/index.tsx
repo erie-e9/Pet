@@ -1,6 +1,7 @@
 import * as React from "react";
 // import { MeComponent } from "../../../generated/apolloComponents";
 import StyledLink from "./Link";
+// import AsyncRoute from "../../AsyncRoute";
 
 const Navigation: React.FunctionComponent = () => (
   <nav>
@@ -13,7 +14,7 @@ const Navigation: React.FunctionComponent = () => (
     {/* tslint:disable-next-line:prettier */}
     {/* Logged links */}
     <StyledLink href="/change-password" title="Change password" /> |{" "}
-    <StyledLink href="/me" title="Me" /> |{" "}
+    <StyledLink href="/me" title="Me" prefetch={true} /> |{" "}
     {/*change-password
     <MeComponent>
       {({ data, loading }: any) => {
